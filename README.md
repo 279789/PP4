@@ -55,9 +55,15 @@ In this exercise you will:
 **Provide:**
 
 ```bash
-# 1) The exact ssh command you ran
+# 1) The exact ssh command you ran:
+ ssh -v phil@192.168.178.28
+
 # 2) A detailed, step-by-step explanation of what happened at each stage
+At first, OpenSSH got opened on my Ubuntu spave, It showed the Version and Date of Instalation, then the program startet reading the config file from my .ssh ordner. It choose options for my *host(Which is the configuration that is used for connections to unknown hosts(hosts that are not implemented in my config). Than the program started connesting to my host over port 22. Connection worked.
+After that, the program searched for an identity file (which is not configurated for host *(I think it did this, because I already have an .pubkey on that server but the private key is only  configuratet for my "Shortcut" that I normaly use). After the program was shure that there is no key it prompted me to login via password. After typing the password, the program opend a new Session on channel 0. After the connection was finished, it showed me Ubuntu Version and last login.
 ```
+
+
 
 ---
 
@@ -78,15 +84,31 @@ In this exercise you will:
 4. Explain in writing:
 
    * How the **private key** is used to sign challenges.
+     The private key uses an mathematical function to encrypt the Challenge and adds a Hash vallue.
+  
+     
    * How the **public key** on the server verifies signatures without revealing the private key.
+     
+     The public key works as an decrypter for the SSH verification. When you are starting an SSH Session, the private key uses an mathematical function to encrypt the Challenge and adds a Hash vallue. When the Challenge arrives the host, he uses his .pub key to generate a vallue called Hash (He generates it with an mathematical function of the Challenge). If the Hash is the same as the signed vallue to the Data, it get's decrypted.
    * Why Ed25519 is preferred (performance, security).
+     
+The Ed25519 key is shorter than for example a RSA key, this turns in to faster encryption and decryption, but the security level of the key is the same. (It uses a different function, that works more efficently)
 
 **Provide:**
 
 ```bash
 # 1) The ssh-keygen command you ran
+ ssh-keygen -t ed25519 -f Aspire
 # 2) The file paths of the generated keys
+phil@phil-Aspire-E5-511:~/.ssh$ ls
+authorized_keys
+phil@phil-Aspire-E5-511:~/.ssh$ pwd
+/home/phil/.ssh
+
 # 3) Your written explanation (3–5 sentences) of the signature process
+
+  The public key works as an decrypter for the SSH verification. When you are starting an SSH Session, the private key uses an mathematical function to encrypt the Challenge and adds a Hash vallue. When the Challenge arrives the host, he uses his .pub key to generate a vallue called Hash (He generates it with an mathematical function of the Challenge). If the Hash is the same as the signed vallue to the Data, it get's decrypted.
+
 ```
 
 ---
@@ -119,14 +141,37 @@ In this exercise you will:
 4. Explain:
 
    * How SSH reads `~/.ssh/config` and matches hosts.
+     SSH takes the Host alias and compares it with the Hosts at the ~/.ssh/config file. It starts at the top,
+     and goes to the bottom till it found the matching "Partner".
+     
+
    * The difference between `HostName` and `Host`.
+     HostName is the Ip, Host is my chosen Alias for the machine.
+
    * How aliases prevent long commands.
+     What is there to explain? The deposited Data behind my alias is the command, the alias could be an easy name like MyRemote, wich is way shoreter and easier than ssh phil@192.168.178.28 . I was always switching accidently the numbers.
 
 **Provide:**
 
 ```text
 # 1) The full contents of your ~/.ssh/config
+
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile /home/philr/hierkönnteihrewerbungstehen
+
+Host aspire
+    HostName 192.168.178.28
+    User phil
+    IdentityFile ~/hierkönnteihrewerbungstehen
+
+Host *
+ServerAliveInterval 60
+ServerAliveCountMax 3
+
 # 2) A short explanation (3–4 sentences) of how the config simplifies connections
+I personally love the config file, because it's way easier to type only my predifined "Host" Instad of typing the hole command +user+IP. Often typed the IP wrong, the config not only helps me with the shortcut, but automatically helps me to organize all my Server connections. It's easy to maintain and makes live very easy, before I used it, I always had to check the Ip on my Router.
 ```
 
 ---
@@ -153,6 +198,7 @@ In this exercise you will:
 4. For each command:
 
    * Verify file timestamps and sizes after transfer, using `ls -la`
+     Thank you for saying that at the end after half of my output got deleted
    * Note any flags you used (e.g., `-r`, `-P` for port).
 5. Explain:
 
@@ -162,9 +208,138 @@ In this exercise you will:
 **Provide:**
 
 ```bash
-# 1) Each scp command you ran
-# 2) Any flags or options used
+# 1) Each scp command you ran: Did some faults but not gonna do it a 5th time, my terminal limits the amount of lines that get stored, so when i used much space half of the output is away.
+
+philr@3245-Laptop:~/Programieren$  scp ./Sens.txt aspire:~/Programmieren
+Sens.txt                                                                              100%    0     0.0KB/s   00:00
+philr@3245-Laptop:~/Programieren$ ssh aspire
+
+Last login: Fri May  9 19:48:27 2025 from 192.168.178.30
+phil@phil-Aspire-E5-511:~$ cd Programmieren
+phil@phil-Aspire-E5-511:~/Programmieren$ ls -la
+insgesamt 12
+drwxrwxr-x  2 phil phil 4096 Mai  9 19:49 .
+drwxr-x--x 31 phil phil 4096 Mai  9 19:41 ..
+-rw-rw-r--  1 phil phil    0 Mai  9 19:41 Ehrenrunde.txt
+-rw-r--r--  1 phil phil    0 Mai  9 19:48 Programieren
+-rw-r--r--  1 phil phil    0 Mai  9 19:49 Sens.txt
+-rw-rw-r--  1 phil phil   12 Mai  9 18:04 Supertest
+phil@phil-Aspire-E5-511:~/Programmieren$
+Connection to 192.168.178.28 closed.
+philr@3245-Laptop:~/Programieren$  scp ./Programieren/Sens.txt aspire:~/Programmieren
+scp: stat local "./Programieren/Sens.txt": Not a directory
+philr@3245-Laptop:~/Programieren$  scp ./Sens.txt aspire:~/Programmieren
+Sens.txt                                                                              100%    0     0.0KB/s   00:00
+philr@3245-Laptop:~/Programieren$ ssh aspire
+
+Last login: Fri May  9 19:48:27 2025 from 192.168.178.30
+phil@phil-Aspire-E5-511:~$ cd Programmieren
+phil@phil-Aspire-E5-511:~/Programmieren$ ls -la
+insgesamt 12
+drwxrwxr-x  2 phil phil 4096 Mai  9 19:49 .
+drwxr-x--x 31 phil phil 4096 Mai  9 19:41 ..
+-rw-rw-r--  1 phil phil    0 Mai  9 19:41 Ehrenrunde.txt
+-rw-r--r--  1 phil phil    0 Mai  9 19:48 Programieren
+-rw-r--r--  1 phil phil    0 Mai  9 19:49 Sens.txt
+-rw-rw-r--  1 phil phil   12 Mai  9 18:04 Supertest
+phil@phil-Aspire-E5-511:~/Programmieren$ exit
+Abgemeldet
+Connection to 192.168.178.28 closed.
+philr@3245-Laptop:~/Programieren$ scp aspire:./Ehrenrunde.txt ~
+scp: ./Ehrenrunde.txt: No such file or directory
+philr@3245-Laptop:~/Programieren$ scp aspire: ./Ehrenrunde.txt ~
+scp: download ./: not a regular file
+philr@3245-Laptop:~/Programieren$ scp aspire:~/Programmieren/Ehrenrunde.txt ~
+philr@3245-Laptop:~/Programieren$ cd ~
+philr@3245-Laptop:~$ ls -la
+total 156
+drwxr-x--- 12 philr philr  4096 May  9 19:56 .
+drwxr-xr-x  3 root  root   4096 Apr 13 10:15 ..
+-rw-r--r--  1 philr philr 61440 Apr 11 21:10 .Tutorial.swp
+-rw-------  1 philr philr 10479 May  9 17:58 .bash_history
+-rw-r--r--  1 philr philr   220 Apr 11 15:01 .bash_logout
+-rw-r--r--  1 philr philr  3940 May  4 10:43 .bashrc
+drwx------  2 philr philr  4096 Apr 11 15:01 .cache
+drwx------  3 philr philr  4096 Apr 11 15:16 .config
+-rw-r--r--  1 philr philr    50 Apr 18 11:23 .gitconfig
+drwxr-xr-x  2 philr philr  4096 Apr 11 15:01 .landscape
+-rw-------  1 philr philr    20 May  7 10:36 .lesshst
+drwxr-xr-x  3 philr philr  4096 Apr 12 11:40 .local
+-rw-r--r--  1 philr philr     0 May  9 16:49 .motd_shown
+-rw-r--r--  1 philr philr   807 Apr 11 15:01 .profile
+drwx------  2 philr philr  4096 May  9 17:49 .ssh
+-rw-r--r--  1 philr philr     0 Apr 11 15:39 .sudo_as_admin_successful
+-rw-------  1 philr philr 16217 May  9 19:46 .viminfo
+drwx------  2 philr philr  4096 Apr 19 13:10 .w3m
+-rw-r--r--  1 philr philr     0 May  9 19:56 Ehrenrunde.txt
+drwxr-xr-x  3 philr philr  4096 Apr 19 14:04 Praktikum
+drwxr-xr-x  8 philr philr  4096 May  9 19:47 Programieren
+drwxr-xr-x  4 philr philr  4096 Apr 19 12:21 Programmieren
+drwxr-xr-x  2 philr philr  4096 Apr 19 14:11 html
+philr@3245-Laptop:~$
+
+phil@phil-Aspire-E5-511:~$ exit
+Abgemeldet
+Connection to 192.168.178.28 closed.
+philr@3245-Laptop:~$ scp aspire:~/Programmieren/Ehrenrunde.txt aspire:~
+philr@3245-Laptop:~$ ssh aspire
+
+Last login: Fri May  9 19:59:36 2025 from 192.168.178.30
+phil@phil-Aspire-E5-511:~$ ls -la
+insgesamt 188
+drwxr-x--x 31 phil phil 4096 Mai  9 20:00 .
+drwxr-xr-x  3 root root 4096 Mär 12  2024 ..
+-rw-------  1 phil phil 3038 Mai  9 20:00 .bash_history
+-rw-r--r--  1 phil phil  220 Mär 12  2024 .bash_logout
+-rw-r--r--  1 phil phil 3771 Mär 12  2024 .bashrc
+drwxr-xr-x  2 phil phil 4096 Mär 12  2024 Bilder
+drwxrwxr-x 12 phil phil 4096 Mär 14  2024 .cache
+drwxr-xr-x 13 phil phil 4096 Mär 31 16:46 .config
+-rw-r--r--  1 phil phil   23 Mär 12  2024 .dmrc
+drwxr-xr-x  2 phil phil 4096 Mär 12  2024 Dokumente
+drwxr-xr-x  2 phil phil 4096 Mär 12  2024 Downloads
+-rw-rw-r--  1 phil phil    0 Mai  9 20:00 Ehrenrunde.txt
+drwx------  3 phil phil 4096 Mär 12  2024 .gnupg
+-rw-r--r--  1 phil phil   22 Mär 12  2024 .gtkrc-2.0
+-rw-r--r--  1 phil phil  516 Mär 12  2024 .gtkrc-xfce
+-rw-------  1 phil phil    0 Mär 12  2024 .ICEauthority
+drwxrwxr-x  7 phil phil 4096 Mär 12  2024 kiauh
+drwxrwxr-x  4 phil phil 4096 Mär 12  2024 kiauh-backups
+-rw-rw-r--  1 phil phil  570 Mär 12  2024 .kiauh.ini
+drwxrwxr-x 12 phil phil 4096 Apr  4 22:06 klipper
+drwxrwxr-x  5 phil phil 4096 Mär 12  2024 klippy-env
+drwxrwxr-x  4 phil phil 4096 Mär 23  2024 .linuxmint
+drwxrwxr-x  3 phil phil 4096 Mär 12  2024 .local
+drwxr-xr-x  6 phil phil 4096 Apr  4 22:04 mainsail
+drwxrwxr-x  3 phil phil 4096 Apr  4 22:04 mainsail-config
+drwxrwxr-x  8 phil phil 4096 Apr  4 22:05 moonraker
+drwxrwxr-x  4 phil phil 4096 Mär 12  2024 moonraker-env
+drwx------  4 phil phil 4096 Mär 12  2024 .mozilla
+drwxr-xr-x  2 phil phil 4096 Mär 12  2024 Musik
+drwxr-xr-x  2 phil phil 4096 Mär 12  2024 Öffentlich
+drwxrwxr-x 11 phil phil 4096 Mär 12  2024 printer_1_data
+drwxrwxr-x 11 phil phil 4096 Mär 12  2024 printer_2_data
+drwxrwxr-x 11 phil phil 4096 Mär 12  2024 printer_3_data
+drwxrwxr-x 11 phil phil 4096 Mär 12  2024 printer_4_data
+-rw-r--r--  1 phil phil  807 Mär 12  2024 .profile
+drwxrwxr-x  2 phil phil 4096 Mai  9 19:49 Programmieren
+drwxrwxr-x  3 phil phil 4096 Mai  8 16:21 repos
+drwxr-xr-x  2 phil phil 4096 Mär 12  2024 Schreibtisch
+drwx------  2 phil phil 4096 Mai  7 16:47 .ssh
+-rw-r--r--  1 phil phil    0 Mär 12  2024 .sudo_as_admin_successful
+-rw-rw-r--  1 phil phil   12 Mai  9 19:39 Supertest
+drwxr-xr-x  2 phil phil 4096 Mär 12  2024 Videos
+-rw-------  1 phil phil 3682 Mai  9 19:41 .viminfo
+drwxr-xr-x  2 phil phil 4096 Mär 12  2024 Vorlagen
+-rw-rw-r--  1 phil phil  165 Mär 12  2024 .wget-hsts
+-rw-------  1 phil phil   63 Mai  9 17:15 .Xauthority
+-rw-------  1 phil phil 5459 Mai  9 17:15 .xsession-errors
+-rw-------  1 phil phil 5459 Mai  7 13:27 .xsession-errors.old
+phil@phil-Aspire-E5-511:~$
+
+# 2) Any flags or options used -
 # 3) A brief explanation (2–3 sentences) of scp’s mechanism
+It's basically copying data save over ssh, it uses the same security methods as ssh. When used correct it's a fast was to copy data from another machine to your own machine or somewhere else.
 ```
 
 ---
@@ -202,15 +377,25 @@ In this exercise you will:
 4. Explain:
 
    * The difference between `~/.bashrc` and `~/.profile` (interactive vs. login shells).
+     .bashrc starts every login, .profile starts every ssh login.
    * Why and when each file is read.
+     
    * How sourcing differs from executing.
 
 **Provide:**
 
 ```bash
 # 1) The contents of login_tasks.sh
+#!/bin/bash -l
+
+echo "Hello there"
+uptime
+ls ~/Programmieren
+
 # 2) The lines you added to ~/.bashrc or ~/.profile
+source ~/login_tasks.sh
 # 3) Your explanation (3–5 sentences) of shell init files and sourcing vs. executing
+
 ```
 
 ---
