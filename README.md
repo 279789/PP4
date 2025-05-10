@@ -377,16 +377,24 @@ It's basically copying data save over ssh, it uses the same security methods as 
 4. Explain:
 
    * The difference between `~/.bashrc` and `~/.profile` (interactive vs. login shells).
-     .bashrc starts every login, .profile starts every ssh login.
-   * Why and when each file is read.
+
+     .bashrc starts every time when a new shell is created (not loginshell) it's usefull for interactive Sessions, or scripts that often used, .profile only starts at the login for example SSH, it's usefull for nice Thinks that you want to see after your login for example : Hello therer, or Time and Date, ....
+
+    * Why and when each file is read.
+
+.bashrc starts every time when a new shell is created (not loginshell). .profile starts only at Login. (Loginshell)
      
+
    * How sourcing differs from executing.
+  
+  The main differents between sourcing and executing is the place where it's done. Sourcing means, that it's done in the actuall shell. Every change or modification that is done has an influence on the actual shell. Executing is the opposite of sorcing, something that gets executet is done in a new shell (subshell). Every modification or change has no influence on the first shell.
+     
 
 **Provide:**
 
 ```bash
 # 1) The contents of login_tasks.sh
-#!/bin/bash -l
+#!/bin/bash -ln
 
 echo "Hello there"
 uptime
@@ -396,6 +404,7 @@ ls ~/Programmieren
 source ~/login_tasks.sh
 # 3) Your explanation (3–5 sentences) of shell init files and sourcing vs. executing
 
+ The main differents between sourcing and executing is the place where it's done. Sourcing means, that it's done in the actuall shell. Every change or modification that is done has an influence on the actual shell. Executing is the opposite of sorcing, something that gets executet is done in a new shell (subshell). Every modification or change has no influence on the first shell.
 ```
 
 ---
