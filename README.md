@@ -59,8 +59,13 @@ In this exercise you will:
  ssh -v phil@192.168.178.28
 
 # 2) A detailed, step-by-step explanation of what happened at each stage
-At first, OpenSSH got opened on my Ubuntu spave, It showed the Version and Date of Instalation, then the program startet reading the config file from my .ssh ordner. It choose options for my *host(Which is the configuration that is used for connections to unknown hosts(hosts that are not implemented in my config). Than the program started connesting to my host over port 22. Connection worked.
-After that, the program searched for an identity file (which is not configurated for host *(I think it did this, because I already have an .pubkey on that server but the private key is only  configuratet for my "Shortcut" that I normaly use). After the program was shure that there is no key it prompted me to login via password. After typing the password, the program opend a new Session on channel 0. After the connection was finished, it showed me Ubuntu Version and last login.
+At first, OpenSSH got opened on my Ubuntu spave, It showed the Version and Date of Instalation, then the program startet
+ reading the config file from my .ssh ordner. It choose options for my *host(Which is the configuration that is used for
+ connections to unknown hosts(hosts that are not implemented in my config). Than the program started connesting to my host over port 22. Connection worked.
+After that, the program searched for an identity file (which is not configurated for host *(I think it did this, because I
+ already have an .pubkey on that server but the private key is only  configuratet for my "Shortcut" that I normaly use).
+ After the program was shure that there is no key it prompted me to login via password. After typing the password, the program opend a new Session on channel 0. After the connection was finished, it showed me Ubuntu Version and last login.
+
 ```
 
 
@@ -89,10 +94,15 @@ After that, the program searched for an identity file (which is not configurated
      
    * How the **public key** on the server verifies signatures without revealing the private key.
      
-     The public key works as an decrypter for the SSH verification. When you are starting an SSH Session, the private key uses an mathematical function to encrypt the Challenge and adds a Hash vallue. When the Challenge arrives the host, he uses his .pub key to generate a vallue called Hash (He generates it with an mathematical function of the Challenge). If the Hash is the same as the signed vallue to the Data, it get's decrypted.
+     The public key works as an decrypter for the SSH verification. When you are starting an SSH Session, the private key
+      uses an mathematical function to encrypt the Challenge and adds a Hash vallue. When the Challenge arrives the host,
+      he uses his .pub key to generate a vallue called Hash (He generates it with an mathematical function of the
+     Challenge). If the Hash is the same as the signed vallue to the Data, it get's decrypted.
+     
    * Why Ed25519 is preferred (performance, security).
      
-The Ed25519 key is shorter than for example a RSA key, this turns in to faster encryption and decryption, but the security level of the key is the same. (It uses a different function, that works more efficently)
+The Ed25519 key is shorter than for example a RSA key, this turns in to faster encryption and decryption, but the security
+level of the key is the same. (It uses a different function, that works more efficently)
 
 **Provide:**
 
@@ -107,7 +117,10 @@ phil@phil-Aspire-E5-511:~/.ssh$ pwd
 
 # 3) Your written explanation (3–5 sentences) of the signature process
 
-  The public key works as an decrypter for the SSH verification. When you are starting an SSH Session, the private key uses an mathematical function to encrypt the Challenge and adds a Hash vallue. When the Challenge arrives the host, he uses his .pub key to generate a vallue called Hash (He generates it with an mathematical function of the Challenge). If the Hash is the same as the signed vallue to the Data, it get's decrypted.
+  The public key works as an decrypter for the SSH verification. When you are starting an SSH Session, the private key
+uses an mathematical function to encrypt the Challenge and adds a Hash vallue. When the Challenge arrives the host, he
+ uses his .pub key to generate a vallue called Hash (He generates it with an mathematical function of the Challenge). If
+the Hash is the same as the signed vallue to the Data, it get's decrypted.
 
 ```
 
@@ -149,7 +162,9 @@ phil@phil-Aspire-E5-511:~/.ssh$ pwd
      HostName is the Ip, Host is my chosen Alias for the machine.
 
    * How aliases prevent long commands.
-     What is there to explain? The deposited Data behind my alias is the command, the alias could be an easy name like MyRemote, wich is way shoreter and easier than ssh phil@192.168.178.28 . I was always switching accidently the numbers.
+     What is there to explain? The deposited Data behind my alias is the command, the alias could be an easy name like
+     MyRemote, wich is way shoreter and easier than ssh phil@192.168.178.28 . I was always switching accidently the
+     numbers.
 
 **Provide:**
 
@@ -171,7 +186,10 @@ ServerAliveInterval 60
 ServerAliveCountMax 3
 
 # 2) A short explanation (3–4 sentences) of how the config simplifies connections
-I personally love the config file, because it's way easier to type only my predifined "Host" Instad of typing the hole command +user+IP. Often typed the IP wrong, the config not only helps me with the shortcut, but automatically helps me to organize all my Server connections. It's easy to maintain and makes live very easy, before I used it, I always had to check the Ip on my Router.
+I personally love the config file, because it's way easier to type only my predifined "Host" Instad of typing the hole
+ command +user+IP. Often typed the IP wrong, the config not only helps me with the shortcut, but automatically helps me to
+organize all my Server connections. It's easy to maintain and makes live very easy, before I used it, I always had to
+check the Ip on my Router.
 ```
 
 ---
@@ -338,8 +356,11 @@ drwxr-xr-x  2 phil phil 4096 Mär 12  2024 Vorlagen
 phil@phil-Aspire-E5-511:~$
 
 # 2) Any flags or options used -
+
 # 3) A brief explanation (2–3 sentences) of scp’s mechanism
-It's basically copying data save over ssh, it uses the same security methods as ssh. When used correct it's a fast was to copy data from another machine to your own machine or somewhere else.
+
+It's basically copying data save over ssh, it uses the same security methods as ssh. When used correct it's a fast was to
+ copy data from another machine to your own machine or somewhere else.
 ```
 
 ---
@@ -348,7 +369,9 @@ It's basically copying data save over ssh, it uses the same security methods as 
 
 **Objective:** Automate commands at login and understand shell initialization files.
 
-1. On the **remote** server, create a script `~/login_tasks.sh` containing at least three commands you find useful (e.g., `echo "Welcome $(whoami)"`, `uptime`, `ls ~/projects`). You may either use `vim` or try the following to create a file from your commandline directely:
+1. On the **remote** server, create a script `~/login_tasks.sh` containing at least three commands you find useful (e.g.,
+ `echo "Welcome $(whoami)"`, `uptime`, `ls ~/projects`). You may either use `vim` or try the following to create a file
+    from your commandline directely:
 
    ```bash
    cat << 'EOF' > ~/login_tasks.sh
@@ -378,16 +401,24 @@ It's basically copying data save over ssh, it uses the same security methods as 
 
    * The difference between `~/.bashrc` and `~/.profile` (interactive vs. login shells).
 
-     .bashrc starts every time when a new shell is created (not loginshell) it's usefull for interactive Sessions, or scripts that often used, .profile only starts at the login for example SSH, it's usefull for nice Thinks that you want to see after your login for example : Hello therer, or Time and Date, ....
+     .bashrc starts every time when a new shell is created (not loginshell) it's usefull for interactive Sessions,
+      or scripts that often used, .profile only starts at the login for example SSH,
+      it's usefull for nice Thinks that you want to see after your login for example:
+     Hello therer, or Time and Date, ....
 
     * Why and when each file is read.
 
-.bashrc starts every time when a new shell is created (not loginshell). .profile starts only at Login. (Loginshell)
+.bashrc starts every time when a new shell is created (not loginshell). .profile starts only at Login.
+(Loginshell)
      
 
    * How sourcing differs from executing.
   
-  The main differents between sourcing and executing is the place where it's done. Sourcing means, that it's done in the actuall shell. Every change or modification that is done has an influence on the actual shell. Executing is the opposite of sorcing, something that gets executet is done in a new shell (subshell). Every modification or change has no influence on the first shell.
+  The main differents between sourcing and executing is the place where it's done.
+  Sourcing means, that it's done in the actuall shell.
+  Every change or modification that is done has an influence on the actual shell.
+  Executing is the opposite of sorcing, something that gets executet is done in a new shell (subshell).
+  Every modification or change has no influence on the first shell.
      
 
 **Provide:**
@@ -404,7 +435,10 @@ ls ~/Programmieren
 source ~/login_tasks.sh
 # 3) Your explanation (3–5 sentences) of shell init files and sourcing vs. executing
 
- The main differents between sourcing and executing is the place where it's done. Sourcing means, that it's done in the actuall shell. Every change or modification that is done has an influence on the actual shell. Executing is the opposite of sorcing, something that gets executet is done in a new shell (subshell). Every modification or change has no influence on the first shell.
+ The main differents between sourcing and executing is the place where it's done. Sourcing means,
+ that it's done in the actuall shell. Every change or modification that is done has an influence on the actual shell.
+ Executing is the opposite of sorcing, something that gets executet is done in a new shell (subshell).
+ Every modification or change has no influence on the first shell.
 ```
 
 ---
